@@ -7,14 +7,6 @@ import (
 	"github.com/gocolly/colly"
 )
 
-func printLines() {
-	for i := 0; i < 50; i++ {
-		fmt.Print("-")
-	}
-
-	fmt.Println()
-}
-
 func main() {
 	c := colly.NewCollector()
 

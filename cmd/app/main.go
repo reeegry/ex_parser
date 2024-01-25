@@ -22,5 +22,5 @@ func main() {
 		})
 	})
 
-	c.Visit("https://ege.sdamgia.ru/test?theme=79&print=true")
+	c.Visit("https://ege.sdamgia.ru/test?theme=204&print=true")
 }

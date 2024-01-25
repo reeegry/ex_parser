@@ -14,6 +14,13 @@ func init() {
 	fileLocation = flag.String("file", "./14.docx", "file location")
 	flag.Parse()
 }
+
+type Exersize struct {
+	num    uint
+	text   string
+	answer string
+}
+
 func main() {
 	// fmt.Printf("Preparing new document to write at %s\n", *fileLocation)
 

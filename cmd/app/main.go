@@ -36,6 +36,20 @@ type Exersice struct {
 	answer_ptr *Answer
 }
 
+func ExPrint(mp *map[string]*Exersice) {
+	for id, ex := range *mp {
+		for i := 0; i < 100; i++ {
+			fmt.Printf("-")
+		}
+		fmt.Println()
+		fmt.Println(id)
+		fmt.Println(ex.exText)
+		fmt.Println(ex.imgs_src)
+		fmt.Println(ex.answer_ptr)
+		//fmt.Printf("%p\n", ex.answer_ptr)
+	}
+}
+
 func main() {
 	c := colly.NewCollector()
 	exrsices := make(map[string]*Exersice)
@@ -87,21 +101,10 @@ func main() {
 			entry.answer_ptr = ansStruct
 
 		}
-		fmt.Printf("%p\n", ansStruct)
 
 	})
 
 	c.Visit("https://ege.sdamgia.ru/test?theme=205&print=true")
-	// for id, ex := range exrsices {
-	// 	for i := 0; i < 100; i++ {
-	// 		fmt.Printf("-")
-	// 	}
-	// 	fmt.Println()
-	// 	fmt.Println(id)
-	// 	fmt.Println(ex.exText)
-	// 	fmt.Println(ex.imgs_src)
-	// 	fmt.Println(ex.answer_ptr)
-	// 	fmt.Printf("%p\n", ex.answer_ptr)
-	// }
+	ExPrint(&exrsices)
 
 }

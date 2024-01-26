@@ -8,17 +8,22 @@ import (
 )
 
 const (
-	inf  = "inf"
-	hist = "his"
-	url  = "https://*-ege.sdamgia.ru" // TODO: прочекать все остальные предметы
+	inf      = "inf"
+	hist     = "hist"
+	math     = "math"
+	mathBase = "mathb"
+	chem     = "chem"
+	rus      = "rus"
+	bio      = "bio"
+	eng      = "en"
+	geo      = "geo"
+	de       = "de"
+	soc      = "soc"
+	fr       = "fr"
+	lit      = "lit"
+	sp       = "sp"
+	url      = "https://*-ege.sdamgia.ru" // TODO: прочекать все остальные предметы
 )
-
-// func subjCheck(url string) string {
-// 	var url_copy string = url
-// 	fmt.Println(url_copy)
-
-// 	return url_copy
-// }
 
 type Answer struct {
 	text string
@@ -37,7 +42,7 @@ func main() {
 
 	c.OnHTML("div.nobreak", func(h *colly.HTMLElement) {
 		txt := strings.ReplaceAll(h.Text, "\u00ad", "")
-		problem_id := h.DOM.Find("a").Text()
+		problemId := h.DOM.Find("a").Text()
 
 		imgs := []string{}
 		h.ForEach("img", func(_ int, el *colly.HTMLElement) {
@@ -55,21 +60,21 @@ func main() {
 			imgs_src:   imgs,
 			answer_ptr: new(Answer),
 		}
-		exrsices[problem_id] = exrsice
+		exrsices[problemId] = exrsice
 	})
 
 	c.OnHTML("tr.prob_answer", func(h *colly.HTMLElement) {
-		var ans_struct *Answer = new(Answer)
+		var ansStruct *Answer = new(Answer)
 		var id string
 
 		h.ForEach("td", func(_ int, el *colly.HTMLElement) {
 			if el.Attr("style") == "border:1px solid black;text-align:left;padding:2px;text-indent:0" { // ans
-				ans_struct.text = el.Text
+				ansStruct.text = el.Text
 			}
-			id_selection := el.DOM.Find("a")
-			_, ok := id_selection.Attr("href")
+			idSelection := el.DOM.Find("a")
+			_, ok := idSelection.Attr("href")
 			if ok {
-				id = id_selection.Text()
+				id = idSelection.Text()
 			}
 		})
 
@@ -77,27 +82,26 @@ func main() {
 		h.ForEach("img", func(_ int, el *colly.HTMLElement) {
 			ans_imgs = append(ans_imgs, el.Attr("src"))
 		})
-		ans_struct.imgs = ans_imgs
+		ansStruct.imgs = ans_imgs
 		if entry, ok := exrsices[id]; ok {
-			entry.answer_ptr = ans_struct
+			entry.answer_ptr = ansStruct
 
 		}
-		fmt.Printf("%p\n", ans_struct)
+		fmt.Printf("%p\n", ansStruct)
 
 	})
 
 	c.Visit("https://ege.sdamgia.ru/test?theme=205&print=true")
-
-	for id, ex := range exrsices {
-		for i := 0; i < 100; i++ {
-			fmt.Printf("-")
-		}
-		fmt.Println()
-		fmt.Println(id)
-		fmt.Println(ex.exText)
-		fmt.Println(ex.imgs_src)
-		fmt.Println(ex.answer_ptr)
-		fmt.Printf("%p\n", ex.answer_ptr)
-	}
+	// for id, ex := range exrsices {
+	// 	for i := 0; i < 100; i++ {
+	// 		fmt.Printf("-")
+	// 	}
+	// 	fmt.Println()
+	// 	fmt.Println(id)
+	// 	fmt.Println(ex.exText)
+	// 	fmt.Println(ex.imgs_src)
+	// 	fmt.Println(ex.answer_ptr)
+	// 	fmt.Printf("%p\n", ex.answer_ptr)
+	// }
 
 }

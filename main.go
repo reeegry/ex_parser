@@ -5,6 +5,8 @@ import (
 	"strings"
 
 	"github.com/gocolly/colly"
+
+	themesParser "github.com/reeegry/ex_parser/themesParser"
 )
 
 const (
@@ -106,5 +108,6 @@ func main() {
 
 	c.Visit("https://ege.sdamgia.ru/test?theme=205&print=true")
 	ExPrint(&exrsices)
+	themesParser.ThemesParser()
 
 }

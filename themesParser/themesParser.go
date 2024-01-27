@@ -2,6 +2,6 @@ package themesParser
 
 import "fmt"
 
-func themesParser() {
+func ThemesParser() {
 	fmt.Println("hello, theme parser!")
 }

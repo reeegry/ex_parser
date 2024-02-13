@@ -2,11 +2,10 @@ package main
 
 import (
 	"fmt"
+	"github.com/reeegry/ex_parser/themesParser"
 	"strings"
 
 	"github.com/gocolly/colly"
-
-	themesParser "github.com/reeegry/ex_parser/themesParser"
 )
 
 const (
@@ -94,11 +93,11 @@ func main() {
 			}
 		})
 
-		ans_imgs := []string{}
+		ansImgs := []string{}
 		h.ForEach("img", func(_ int, el *colly.HTMLElement) {
-			ans_imgs = append(ans_imgs, el.Attr("src"))
+			ansImgs = append(ansImgs, el.Attr("src"))
 		})
-		ansStruct.imgs = ans_imgs
+		ansStruct.imgs = ansImgs
 		if entry, ok := exrsices[id]; ok {
 			entry.answer_ptr = ansStruct
 
@@ -106,8 +105,11 @@ func main() {
 
 	})
 
-	c.Visit("https://ege.sdamgia.ru/test?theme=205&print=true")
-	ExPrint(&exrsices)
-	themesParser.ThemesParser()
-
+	err := c.Visit("https://ege.sdamgia.ru/test?theme=205&print=true")
+	if err != nil {
+		return
+	}
+	//ExPrint(&exrsices)
+	themesParser.ThemesParser(c)
+	//
 }

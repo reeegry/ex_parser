@@ -26,15 +26,18 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+
 	fileinfo, err := readFile.Stat()
 	if err != nil {
 		panic(err)
 	}
+
 	size := fileinfo.Size()
 	doc, err := docxlib.Parse(readFile, int64(size))
 	if err != nil {
 		panic(err)
 	}
+
 	for _, para := range doc.Paragraphs() {
 		for _, child := range para.Children() {
 			if child.Run != nil {

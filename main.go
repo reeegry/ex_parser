@@ -45,8 +45,8 @@ func ExPrint(mp *map[string]*Exersice) {
 		fmt.Println("ID: ", id)
 		fmt.Println("EX TEXT: ", ex.exText)
 		fmt.Println("EX IMGS_SRC: ", ex.imgs_src)
-		fmt.Println("ANSWER: ", ex.answer_ptr)
-		fmt.Printf("%p\n", ex.answer_ptr)
+		fmt.Println("ANSWER TEXT: ", ex.answer_ptr.text)
+		fmt.Println("ANSWER IMGS: ", ex.answer_ptr.imgs)
 	}
 }
 
@@ -109,8 +109,9 @@ func main() {
 
 	})
 
-	err := c.Visit("https://ege.sdamgia.ru/test?theme=330&print=true")
+	err := c.Visit("https://math-ege.sdamgia.ru/test?theme=90&print=true")
 	if err != nil {
+		fmt.Println(err)
 		return
 	}
 	ExPrint(&exrsices)

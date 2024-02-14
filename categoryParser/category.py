@@ -1,10 +1,14 @@
 import json
-import codecs
 from sdamgia import SdamGIA
 
 
-subject = "math"
+subjects = ["inf", "hist", "math", "mathb", "chem", "rus", "bio", "en", "geo", "de", "soc", "fr", "lit", "sp"]
 sdamgia = SdamGIA()
 
-with open("categores.json", "w") as file:
-    json.dump(sdamgia.get_catalog(subject), file)
+for subject in subjects:
+    with open(f"categores_{subject}.json", "w") as file:
+        print(subject)
+        try:
+            json.dump(sdamgia.get_catalog(subject), file)
+        except:
+            print(f"can't create {subject} json")

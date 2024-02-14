@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"github.com/reeegry/ex_parser/themesParser"
 	"strings"
 
 	"github.com/gocolly/colly"
@@ -23,7 +22,7 @@ const (
 	fr       = "fr"
 	lit      = "lit"
 	sp       = "sp"
-	url      = "https://*-ege.sdamgia.ru" // TODO: прочекать все остальные предметы
+	url      = "https://math-ege.sdamgia.ru" // TODO: прочекать все остальные предметы
 )
 
 type Answer struct {
@@ -43,11 +42,11 @@ func ExPrint(mp *map[string]*Exersice) {
 			fmt.Printf("-")
 		}
 		fmt.Println()
-		fmt.Println(id)
-		fmt.Println(ex.exText)
-		fmt.Println(ex.imgs_src)
-		fmt.Println(ex.answer_ptr)
-		//fmt.Printf("%p\n", ex.answer_ptr)
+		fmt.Println("ID: ", id)
+		fmt.Println("EX TEXT: ", ex.exText)
+		fmt.Println("EX IMGS_SRC: ", ex.imgs_src)
+		fmt.Println("ANSWER: ", ex.answer_ptr)
+		fmt.Printf("%p\n", ex.answer_ptr)
 	}
 }
 
@@ -55,9 +54,14 @@ func main() {
 	c := colly.NewCollector()
 	exrsices := make(map[string]*Exersice)
 
+	c.OnError(func(r *colly.Response, err error) {
+		fmt.Println("Request URL:", r.Request.URL, "failed with response:", r, "\nError:", err)
+	})
+
 	c.OnHTML("div.nobreak", func(h *colly.HTMLElement) {
-		txt := strings.ReplaceAll(h.Text, "\u00ad", "")
-		problemId := h.DOM.Find("a").Text()
+		txt := h.DOM.Find("p").Text()
+		txt = strings.ReplaceAll(txt, "\u00ad", "")
+		problemId := h.DOM.Find("span.prob_nums").Find("a").Text()
 
 		imgs := []string{}
 		h.ForEach("img", func(_ int, el *colly.HTMLElement) {
@@ -105,11 +109,9 @@ func main() {
 
 	})
 
-	err := c.Visit("https://ege.sdamgia.ru/test?theme=205&print=true")
+	err := c.Visit("https://ege.sdamgia.ru/test?theme=330&print=true")
 	if err != nil {
 		return
 	}
-	//ExPrint(&exrsices)
-	themesParser.ThemesParser(c)
-	//
+	ExPrint(&exrsices)
 }

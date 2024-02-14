@@ -1,4 +1,5 @@
 import json
+import codecs
 from sdamgia import SdamGIA
 
 

@@ -1,19 +1,12 @@
-package main
+package docxParse
 
 import (
-	"flag"
 	"fmt"
+	"io"
 	"os"
 
-	"github.com/gonfva/docxlib"
+	"code.sajari.com/docconv"
 )
-
-var fileLocation *string
-
-func init() {
-	fileLocation = flag.String("file", "./14.docx", "file location")
-	flag.Parse()
-}
 
 type Exersize struct {
 	num    uint
@@ -21,30 +14,24 @@ type Exersize struct {
 	answer string
 }
 
-func main() {
-	readFile, err := os.Open(*fileLocation)
+func rusParse() {
+
+}
+
+func DocxFileParse(path string, sybject string) {
+	f, err := os.Open(path)
 	if err != nil {
 		panic(err)
 	}
+	defer f.Close()
 
-	fileinfo, err := readFile.Stat()
+	var r io.Reader
+	r = f
+
+	tmpl, _, err := docconv.ConvertDocx(r)
 	if err != nil {
-		panic(err)
+		return
 	}
 
-	size := fileinfo.Size()
-	doc, err := docxlib.Parse(readFile, int64(size))
-	if err != nil {
-		panic(err)
-	}
-
-	for _, para := range doc.Paragraphs() {
-		for _, child := range para.Children() {
-			if child.Run != nil {
-				fmt.Printf("%s", child.Run.Text.Text)
-			}
-		}
-		fmt.Println()
-	}
-	fmt.Println("End of main")
+	fmt.Println(tmpl)
 }

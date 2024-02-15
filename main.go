@@ -5,6 +5,8 @@ import (
 	"strings"
 
 	"github.com/gocolly/colly"
+
+	"github.com/reeegry/ex_parser/docxParse"
 )
 
 const (
@@ -50,7 +52,7 @@ func ExPrint(mp *map[string]*Exersice) {
 	}
 }
 
-func main() {
+func SdamGiaParse() {
 	c := colly.NewCollector()
 	exrsices := make(map[string]*Exersice)
 
@@ -114,5 +116,10 @@ func main() {
 		fmt.Println(err)
 		return
 	}
+
 	ExPrint(&exrsices)
+}
+
+func main() {
+	docxParse.DocxFileParse("./docxParse/17_1 (1).docx", "")
 }

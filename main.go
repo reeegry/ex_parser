@@ -2,11 +2,11 @@ package main
 
 import (
 	"fmt"
+	"github.com/reeegry/ex_parser/docxParse"
+	"github.com/reeegry/ex_parser/unloadDoc"
 	"strings"
 
 	"github.com/gocolly/colly"
-
-	"github.com/reeegry/ex_parser/docxParse"
 )
 
 const (
@@ -24,7 +24,7 @@ const (
 	fr       = "fr"
 	lit      = "lit"
 	sp       = "sp"
-	url      = "https://math-ege.sdamgia.ru" // TODO: прочекать все остальные предметы
+	url      = "https://math-ege.sdamgia.ru"
 )
 
 type Answer struct {
@@ -121,5 +121,9 @@ func SdamGiaParse() {
 }
 
 func main() {
-	docxParse.DocxFileParse("./docxParse/17_1 (1).docx", "")
+	//SdamGiaParse()
+	var parsedExercises []string
+	parsedExercises = *docxParse.DocxFileParse("./docxParse/В1 н-д.docx", "")
+	//fmt.Println(parsedExercises)
+	unloadDoc.Upload(&parsedExercises)
 }

@@ -48,12 +48,12 @@ func (r *RadioButtons) InputHandler() func(event *tcell.EventKey, setFocus func(
 		case tcell.KeyUp:
 			r.currentOption--
 			if r.currentOption < 0 {
-				r.currentOption = 0
+				r.currentOption = len(r.options) - 1
 			}
 		case tcell.KeyDown:
 			r.currentOption++
 			if r.currentOption >= len(r.options) {
-				r.currentOption = len(r.options) - 1
+				r.currentOption = 0
 			}
 		}
 	})
@@ -97,7 +97,7 @@ func DrawUi() {
 
 	radioButtons := NewRadioButtons(subjects)
 	radioButtons.SetBorder(true).
-		SetTitle("Antispizding").
+		SetTitle("A[red]n[yellow]t[green]i[blue]s[darkmagenta]p[red]i[yellow]z[white]d[:yellow]i[:green]n[:darkcyan]g").
 		SetRect(0, 0, 30, len(subjects)+2)
 	if err := tview.NewApplication().SetRoot(radioButtons, false).EnableMouse(true).Run(); err != nil {
 		panic(err)

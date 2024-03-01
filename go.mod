@@ -11,6 +11,7 @@ require (
 	github.com/JalfResi/justext v0.0.0-20170829062021-c0282dea7198 // indirect
 	github.com/PuerkitoBio/goquery v1.8.1 // indirect
 	github.com/advancedlogic/GoOse v0.0.0-20191112112754-e742535969c1 // indirect
+	github.com/agnivade/levenshtein v1.1.1 // indirect
 	github.com/andybalholm/cascadia v1.3.1 // indirect
 	github.com/antchfx/htmlquery v1.3.0 // indirect
 	github.com/antchfx/xmlquery v1.3.18 // indirect

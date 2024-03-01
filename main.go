@@ -2,10 +2,12 @@ package main
 
 import (
 	"fmt"
+	"github.com/reeegry/ex_parser/docxParse"
+	"github.com/reeegry/ex_parser/unloadDoc"
 	"strings"
 
 	"github.com/gocolly/colly"
-	"github.com/reeegry/ex_parser/terminalUI"
+	"github.com/reeegry/ex_parser/levenshteinDistance"
 )
 
 const (
@@ -51,7 +53,7 @@ func ExPrint(mp *map[string]*Exersice) {
 	}
 }
 
-func SdamGiaParse() {
+func SdamGiaParse() map[string]*Exersice {
 	c := colly.NewCollector()
 	exrsices := make(map[string]*Exersice)
 
@@ -110,21 +112,44 @@ func SdamGiaParse() {
 
 	})
 
-	err := c.Visit("https://math-ege.sdamgia.ru/test?theme=90&print=true")
+	err := c.Visit("https://rus-ege.sdamgia.ru/test?theme=340&print=true")
 	if err != nil {
 		fmt.Println(err)
-		return
+		panic(err)
 	}
 
 	ExPrint(&exrsices)
+
+	return exrsices
+}
+
+func compareExersices(sdamGiaExersices *map[string]*Exersice, docExersices *[]string) {
+
+	for _, sdamGiaProblem := range *sdamGiaExersices {
+		for _, docProblem := range *docExersices {
+			docProblem = strings.ReplaceAll(docProblem, " ", "")
+			docProblem = strings.ReplaceAll(docProblem, ",", "")
+			docProblem = strings.ReplaceAll(docProblem, ".", "")
+			sdamGiaProblem.exText = strings.ReplaceAll(sdamGiaProblem.exText, " ", "")
+			sdamGiaProblem.exText = strings.ReplaceAll(sdamGiaProblem.exText, ",", "")
+			sdamGiaProblem.exText = strings.ReplaceAll(sdamGiaProblem.exText, ".", "")
+			if levenshteinDistance.FindDistance(&docProblem, &sdamGiaProblem.exText) < min(len(docProblem), len(sdamGiaProblem.exText))/100*5 {
+				fmt.Println("Возможен спиздинг\n")
+				fmt.Println(docProblem)
+				fmt.Println(sdamGiaProblem.exText)
+			}
+		}
+	}
 }
 
 func main() {
-	terminalUI.DrawUi()
-	//SdamGiaParse()
+	//terminalUI.DrawUi()
+	parsedExSdamGia := SdamGiaParse()
 
-	//var parsedExercises []string
-	//parsedExercises = *docxParse.DocxFileParse("./docxParse/В1 н-д.docx", "")
-	//fmt.Println(parsedExercises)
-	//unloadDoc.Upload(&parsedExercises)
+	var parsedExFromDoc []string
+	parsedExFromDoc = *docxParse.DocxFileParse("./docxParse/1.docx", "")
+	//fmt.Println(parsedExFromDoc)
+	unloadDoc.Upload(&parsedExFromDoc)
+
+	compareExersices(&parsedExSdamGia, &parsedExFromDoc)
 }

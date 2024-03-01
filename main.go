@@ -2,11 +2,10 @@ package main
 
 import (
 	"fmt"
-	"github.com/reeegry/ex_parser/docxParse"
-	"github.com/reeegry/ex_parser/unloadDoc"
 	"strings"
 
 	"github.com/gocolly/colly"
+	"github.com/reeegry/ex_parser/terminalUI"
 )
 
 const (
@@ -121,9 +120,11 @@ func SdamGiaParse() {
 }
 
 func main() {
+	terminalUI.DrawUi()
 	//SdamGiaParse()
-	var parsedExercises []string
-	parsedExercises = *docxParse.DocxFileParse("./docxParse/В1 н-д.docx", "")
+
+	//var parsedExercises []string
+	//parsedExercises = *docxParse.DocxFileParse("./docxParse/В1 н-д.docx", "")
 	//fmt.Println(parsedExercises)
-	unloadDoc.Upload(&parsedExercises)
+	//unloadDoc.Upload(&parsedExercises)
 }

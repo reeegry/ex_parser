@@ -40,17 +40,6 @@ func rusParseVariant(text *string) *[]string {
 
 	}
 
-	//for i, el := range exercise {
-	//	fmt.Println(el)
-	//	for i := 0; i < 90; i++ {
-	//		fmt.Print("-")
-	//	}
-	//	fmt.Println()
-	//
-	//	if i > 400 {
-	//		break
-	//	}
-	//}
 	return &exercise
 }
 

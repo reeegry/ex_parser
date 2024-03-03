@@ -2,12 +2,14 @@ package main
 
 import (
 	"fmt"
-	"github.com/reeegry/ex_parser/docxParse"
-	"github.com/reeegry/ex_parser/unloadDoc"
 	"strings"
 
 	"github.com/gocolly/colly"
+
+	"github.com/reeegry/ex_parser/docxParse"
 	"github.com/reeegry/ex_parser/levenshteinDistance"
+	"github.com/reeegry/ex_parser/terminalUI"
+	"github.com/reeegry/ex_parser/unloadDoc"
 )
 
 const (
@@ -124,15 +126,15 @@ func SdamGiaParse() map[string]*Exersice {
 }
 
 func compareExersices(sdamGiaExersices *map[string]*Exersice, docExersices *[]string) {
-
+	toReplace := []string{" ", ".", ",", "\n"}
 	for _, sdamGiaProblem := range *sdamGiaExersices {
 		for _, docProblem := range *docExersices {
-			docProblem = strings.ReplaceAll(docProblem, " ", "")
-			docProblem = strings.ReplaceAll(docProblem, ",", "")
-			docProblem = strings.ReplaceAll(docProblem, ".", "")
-			sdamGiaProblem.exText = strings.ReplaceAll(sdamGiaProblem.exText, " ", "")
-			sdamGiaProblem.exText = strings.ReplaceAll(sdamGiaProblem.exText, ",", "")
-			sdamGiaProblem.exText = strings.ReplaceAll(sdamGiaProblem.exText, ".", "")
+
+			for _, chr := range toReplace {
+				docProblem = strings.ReplaceAll(docProblem, chr, "")
+				sdamGiaProblem.exText = strings.ReplaceAll(sdamGiaProblem.exText, chr, "")
+			}
+
 			if levenshteinDistance.FindDistance(&docProblem, &sdamGiaProblem.exText) < min(len(docProblem), len(sdamGiaProblem.exText))/100*5 {
 				fmt.Println("Возможен спиздинг\n")
 				fmt.Println(docProblem)
@@ -143,7 +145,7 @@ func compareExersices(sdamGiaExersices *map[string]*Exersice, docExersices *[]st
 }
 
 func main() {
-	//terminalUI.DrawUi()
+	terminalUI.DrawUi()
 	parsedExSdamGia := SdamGiaParse()
 
 	var parsedExFromDoc []string

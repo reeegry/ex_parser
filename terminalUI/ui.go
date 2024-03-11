@@ -55,12 +55,8 @@ func DrawUI() {
 	}
 
 	subjectsList := tview.NewList()
-	//x, y, width, height := subjectsList.GetRect()
-	//subjectsList.Set
 	modes := *CreateModes(subjects)
-	//x, y, width, height := subjectsList.GetRect()
 	modeList := tview.NewList()
-	//modeList.SetRect(x+width+indent, y, width, height)
 	SelectedHandler := func(subject string) func() {
 		return func() {
 			modeList.SetBorder(true)

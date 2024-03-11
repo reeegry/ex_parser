@@ -120,7 +120,7 @@ func SdamGiaParse() map[string]*Exersice {
 		panic(err)
 	}
 
-	ExPrint(&exrsices)
+	//ExPrint(&exrsices)
 
 	return exrsices
 }
@@ -137,8 +137,8 @@ func compareExersices(sdamGiaExersices *map[string]*Exersice, docExersices *[]st
 
 			if levenshteinDistance.FindDistance(&docProblem, &sdamGiaProblem.exText) < min(len(docProblem), len(sdamGiaProblem.exText))/100*5 {
 				fmt.Println("Возможен спиздинг\n")
-				fmt.Println(docProblem)
-				fmt.Println(sdamGiaProblem.exText)
+				//fmt.Println(docProblem)
+				//fmt.Println(sdamGiaProblem.exText)
 			}
 		}
 	}

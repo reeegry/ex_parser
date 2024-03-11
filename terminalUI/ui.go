@@ -193,15 +193,15 @@ func DrawUI() {
 	}
 
 	subjectsList = subjectsList.
-		AddItem("Русский язык", "", ' ', RusSelected).
-		AddItem("Математика профиль", "", ' ', MathSelected).
-		AddItem("Обществознание", "", ' ', SocSelected).
-		AddItem("Биология", "", ' ', BioSelected).
-		AddItem("Химия", "", ' ', ChemSelected).
-		AddItem("Информатика", "", ' ', InfoSelected).
-		AddItem("История", "", ' ', HistSelected).
-		AddItem("Английский язык", "", ' ', EngSelected).
-		AddItem("Физика", "", ' ', PhysSelected)
+		AddItem("Русский язык", "", 0, RusSelected).
+		AddItem("Математика профиль", "", 0, MathSelected).
+		AddItem("Обществознание", "", 0, SocSelected).
+		AddItem("Биология", "", 0, BioSelected).
+		AddItem("Химия", "", 0, ChemSelected).
+		AddItem("Информатика", "", 0, InfoSelected).
+		AddItem("История", "", 0, HistSelected).
+		AddItem("Английский язык", "", 0, EngSelected).
+		AddItem("Физика", "", 0, PhysSelected)
 
 	subjectsList.SetBorderPadding(1, 1, 2, 2)
 

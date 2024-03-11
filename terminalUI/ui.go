@@ -1,87 +1,45 @@
-// Demo code which illustrates how to implement your own primitive.
 package terminalUI
 
 import (
 	"fmt"
-
-	"github.com/gdamore/tcell/v2"
 	"github.com/rivo/tview"
+	"strconv"
 )
 
-// RadioButtons implements a simple primitive for radio button selections.
-type RadioButtons struct {
-	*tview.Box
-	options       []string
-	currentOption int
-}
-
-// NewRadioButtons returns a new radio button primitive.
-func NewRadioButtons(options []string) *RadioButtons {
-	return &RadioButtons{
-		Box:     tview.NewBox(),
-		options: options,
+func CreateModes(subjects []string) *map[string][]string {
+	counts := map[string]int{
+		"Русский язык":       27,
+		"Математика профиль": 19,
+		"Обществознание":     25,
+		"Биология":           28,
+		"Химия":              34,
+		"Информатика":        27,
+		"Литература":         11,
+		"История":            21,
+		"Английский язык":    42,
+		"Физика":             26,
 	}
-}
 
-// Draw draws this primitive onto the screen.
-func (r *RadioButtons) Draw(screen tcell.Screen) {
-	r.Box.DrawForSubclass(screen, r)
-	x, y, width, height := r.GetInnerRect()
+	modes := make(map[string][]string)
 
-	for index, option := range r.options {
-		if index >= height {
-			break
+	for _, subj := range subjects {
+		modes[subj] = append(modes[subj], "Пробник")
+		for i := 1; i <= counts[subj]; i++ {
+			modes[subj] = append(modes[subj], strconv.FormatInt(int64(i), 10))
 		}
-		radioButton := "\u25ef" // Unchecked.
-		if index == r.currentOption {
-			radioButton = "\u25c9" // Checked.
-		}
-		line := fmt.Sprintf(`%s[white]  %s`, radioButton, option)
-		tview.Print(screen, line, x, y+index, width, tview.AlignLeft, tcell.ColorYellow)
 	}
+
+	fmt.Println(modes)
+	return &modes
 }
 
-// InputHandler returns the handler for this primitive.
-func (r *RadioButtons) InputHandler() func(event *tcell.EventKey, setFocus func(p tview.Primitive)) {
-	return r.WrapInputHandler(func(event *tcell.EventKey, setFocus func(p tview.Primitive)) {
-		switch event.Key() {
-		case tcell.KeyUp:
-			r.currentOption--
-			if r.currentOption < 0 {
-				r.currentOption = len(r.options) - 1
-			}
-		case tcell.KeyDown:
-			r.currentOption++
-			if r.currentOption >= len(r.options) {
-				r.currentOption = 0
-			}
-		}
-	})
-}
+func DrawUI() {
+	app := tview.NewApplication()
 
-// MouseHandler returns the mouse handler for this primitive.
-func (r *RadioButtons) MouseHandler() func(action tview.MouseAction, event *tcell.EventMouse, setFocus func(p tview.Primitive)) (consumed bool, capture tview.Primitive) {
-	return r.WrapMouseHandler(func(action tview.MouseAction, event *tcell.EventMouse, setFocus func(p tview.Primitive)) (consumed bool, capture tview.Primitive) {
-		x, y := event.Position()
-		_, rectY, _, _ := r.GetInnerRect()
-		if !r.InRect(x, y) {
-			return false, nil
-		}
+	const (
+		title = "A[red]n[yellow]t[green]i[blue]s[darkmagenta]p[red]i[yellow]z[white]d[:yellow]i[:green]n[:darkcyan]g"
+	)
 
-		if action == tview.MouseLeftClick {
-			setFocus(r)
-			index := y - rectY
-			if index >= 0 && index < len(r.options) {
-				r.currentOption = index
-				consumed = true
-			}
-		}
-
-		return
-	})
-}
-
-func DrawUi() {
 	subjects := []string{
 		"Русский язык",
 		"Математика профиль",
@@ -95,11 +53,165 @@ func DrawUi() {
 		"Физика",
 	}
 
-	radioButtons := NewRadioButtons(subjects)
-	radioButtons.SetBorder(true).
-		SetTitle("A[red]n[yellow]t[green]i[blue]s[darkmagenta]p[red]i[yellow]z[white]d[:yellow]i[:green]n[:darkcyan]g").
-		SetRect(0, 0, 30, len(subjects)+2)
-	if err := tview.NewApplication().SetRoot(radioButtons, false).EnableMouse(true).Run(); err != nil {
+	subjectsList := tview.NewList()
+	modes := *CreateModes(subjects)
+	modeList := tview.NewList()
+
+	RusSelected := func() {
+		modeList.Clear()
+
+		for _, value := range modes["Русский язык"] {
+			modeList.AddItem(value, "", ' ', func() {})
+		}
+
+		app.SetFocus(modeList)
+		modeList.SetDoneFunc(func() {
+			app.SetFocus(subjectsList)
+		}).SetSelectedFunc(func(int, string, string, rune) {
+			app.SetFocus(subjectsList)
+		})
+	}
+
+	MathSelected := func() {
+		modeList.Clear()
+
+		for _, value := range modes["Математика профиль"] {
+			modeList.AddItem(value, "", ' ', func() {})
+		}
+
+		app.SetFocus(modeList)
+		modeList.SetDoneFunc(func() {
+			app.SetFocus(subjectsList)
+		}).SetSelectedFunc(func(int, string, string, rune) {
+			app.SetFocus(subjectsList)
+		})
+	}
+
+	SocSelected := func() {
+		modeList.Clear()
+
+		for _, value := range modes["Обществознание"] {
+			modeList.AddItem(value, "", ' ', func() {})
+		}
+
+		app.SetFocus(modeList)
+		modeList.SetDoneFunc(func() {
+			app.SetFocus(subjectsList)
+		}).SetSelectedFunc(func(int, string, string, rune) {
+			app.SetFocus(subjectsList)
+		})
+	}
+
+	BioSelected := func() {
+		modeList.Clear()
+
+		for _, value := range modes["Биология"] {
+			modeList.AddItem(value, "", ' ', func() {})
+		}
+
+		app.SetFocus(modeList)
+		modeList.SetDoneFunc(func() {
+			app.SetFocus(subjectsList)
+		}).SetSelectedFunc(func(int, string, string, rune) {
+			app.SetFocus(subjectsList)
+		})
+	}
+
+	ChemSelected := func() {
+		modeList.Clear()
+
+		for _, value := range modes["Химия"] {
+			modeList.AddItem(value, "", ' ', func() {})
+		}
+
+		app.SetFocus(modeList)
+		modeList.SetDoneFunc(func() {
+			app.SetFocus(subjectsList)
+		}).SetSelectedFunc(func(int, string, string, rune) {
+			app.SetFocus(subjectsList)
+		})
+	}
+
+	InfoSelected := func() {
+		modeList.Clear()
+
+		for _, value := range modes["Информатика"] {
+			modeList.AddItem(value, "", ' ', func() {})
+		}
+
+		app.SetFocus(modeList)
+		modeList.SetDoneFunc(func() {
+			app.SetFocus(subjectsList)
+		}).SetSelectedFunc(func(int, string, string, rune) {
+			app.SetFocus(subjectsList)
+		})
+	}
+
+	HistSelected := func() {
+		modeList.Clear()
+
+		for _, value := range modes["История"] {
+			modeList.AddItem(value, "", ' ', func() {})
+		}
+
+		app.SetFocus(modeList)
+		modeList.SetDoneFunc(func() {
+			app.SetFocus(subjectsList)
+		}).SetSelectedFunc(func(int, string, string, rune) {
+			app.SetFocus(subjectsList)
+		})
+	}
+
+	EngSelected := func() {
+		modeList.Clear()
+
+		for _, value := range modes["Английский язык"] {
+			modeList.AddItem(value, "", ' ', func() {})
+		}
+
+		app.SetFocus(modeList)
+		modeList.SetDoneFunc(func() {
+			app.SetFocus(subjectsList)
+		}).SetSelectedFunc(func(int, string, string, rune) {
+			app.SetFocus(subjectsList)
+		})
+	}
+
+	PhysSelected := func() {
+		modeList.Clear()
+
+		for _, value := range modes["Физика"] {
+			modeList.AddItem(value, "", ' ', func() {})
+		}
+
+		app.SetFocus(modeList)
+		modeList.SetDoneFunc(func() {
+			app.SetFocus(subjectsList)
+		}).SetSelectedFunc(func(int, string, string, rune) {
+			app.SetFocus(subjectsList)
+		})
+	}
+
+	subjectsList = subjectsList.
+		AddItem("Русский язык", "", ' ', RusSelected).
+		AddItem("Математика профиль", "", ' ', MathSelected).
+		AddItem("Обществознание", "", ' ', SocSelected).
+		AddItem("Биология", "", ' ', BioSelected).
+		AddItem("Химия", "", ' ', ChemSelected).
+		AddItem("Информатика", "", ' ', InfoSelected).
+		AddItem("История", "", ' ', HistSelected).
+		AddItem("Английский язык", "", ' ', EngSelected).
+		AddItem("Физика", "", ' ', PhysSelected)
+
+	subjectsList.SetBorderPadding(1, 1, 2, 2)
+
+	fmt.Println(subjects)
+	flex := tview.NewFlex().
+		AddItem(tview.NewFlex().
+			SetDirection(tview.FlexRow).
+			AddItem(subjectsList, 10, 1, true).
+			AddItem(modeList, 0, 1, false), 0, 1, true)
+	if err := app.SetRoot(flex, true).EnableMouse(true).EnablePaste(true).Run(); err != nil {
 		panic(err)
 	}
 }

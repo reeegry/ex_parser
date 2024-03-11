@@ -114,7 +114,7 @@ func SdamGiaParse() map[string]*Exersice {
 
 	})
 
-	err := c.Visit("https://rus-ege.sdamgia.ru/test?theme=340&print=true")
+	err := c.Visit("https://math-ege.sdamgia.ru/test?theme=182&print=true")
 	if err != nil {
 		fmt.Println(err)
 		panic(err)
@@ -145,12 +145,11 @@ func compareExersices(sdamGiaExersices *map[string]*Exersice, docExersices *[]st
 }
 
 func main() {
-	terminalUI.DrawUi()
+	terminalUI.DrawUI()
 	parsedExSdamGia := SdamGiaParse()
 
 	var parsedExFromDoc []string
 	parsedExFromDoc = *docxParse.DocxFileParse("./docxParse/1.docx", "")
-	//fmt.Println(parsedExFromDoc)
 	unloadDoc.Upload(&parsedExFromDoc)
 
 	compareExersices(&parsedExSdamGia, &parsedExFromDoc)

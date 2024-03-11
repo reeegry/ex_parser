@@ -37,7 +37,8 @@ func DrawUI() {
 	app := tview.NewApplication()
 
 	const (
-		title = "A[red]n[yellow]t[green]i[blue]s[darkmagenta]p[red]i[yellow]z[white]d[:yellow]i[:green]n[:darkcyan]g"
+		title  = "A[red]n[yellow]t[green]i[blue]s[darkmagenta]p[red]i[yellow]z[white]d[:yellow]i[:green]n[:darkcyan]g"
+		indent = 20
 	)
 
 	subjects := []string{
@@ -54,163 +55,54 @@ func DrawUI() {
 	}
 
 	subjectsList := tview.NewList()
+	//x, y, width, height := subjectsList.GetRect()
+	//subjectsList.Set
 	modes := *CreateModes(subjects)
+	//x, y, width, height := subjectsList.GetRect()
 	modeList := tview.NewList()
+	//modeList.SetRect(x+width+indent, y, width, height)
+	SelectedHandler := func(subject string) func() {
+		return func() {
+			modeList.SetBorder(true)
+			subjectsList.SetBorder(false)
+			modeList.Clear()
 
-	RusSelected := func() {
-		modeList.Clear()
+			for _, value := range modes[subject] {
+				modeList.AddItem(value, "", 0, func() {})
+			}
 
-		for _, value := range modes["Русский язык"] {
-			modeList.AddItem(value, "", ' ', func() {})
+			app.SetFocus(modeList)
+			modeList.SetDoneFunc(func() {
+				modeList.SetBorder(false)
+				subjectsList.SetBorder(true)
+				app.SetFocus(subjectsList)
+			}).SetSelectedFunc(func(int, string, string, rune) {
+				app.SetFocus(subjectsList)
+				modeList.SetBorder(false)
+				subjectsList.SetBorder(true)
+			})
 		}
-
-		app.SetFocus(modeList)
-		modeList.SetDoneFunc(func() {
-			app.SetFocus(subjectsList)
-		}).SetSelectedFunc(func(int, string, string, rune) {
-			app.SetFocus(subjectsList)
-		})
-	}
-
-	MathSelected := func() {
-		modeList.Clear()
-
-		for _, value := range modes["Математика профиль"] {
-			modeList.AddItem(value, "", ' ', func() {})
-		}
-
-		app.SetFocus(modeList)
-		modeList.SetDoneFunc(func() {
-			app.SetFocus(subjectsList)
-		}).SetSelectedFunc(func(int, string, string, rune) {
-			app.SetFocus(subjectsList)
-		})
-	}
-
-	SocSelected := func() {
-		modeList.Clear()
-
-		for _, value := range modes["Обществознание"] {
-			modeList.AddItem(value, "", ' ', func() {})
-		}
-
-		app.SetFocus(modeList)
-		modeList.SetDoneFunc(func() {
-			app.SetFocus(subjectsList)
-		}).SetSelectedFunc(func(int, string, string, rune) {
-			app.SetFocus(subjectsList)
-		})
-	}
-
-	BioSelected := func() {
-		modeList.Clear()
-
-		for _, value := range modes["Биология"] {
-			modeList.AddItem(value, "", ' ', func() {})
-		}
-
-		app.SetFocus(modeList)
-		modeList.SetDoneFunc(func() {
-			app.SetFocus(subjectsList)
-		}).SetSelectedFunc(func(int, string, string, rune) {
-			app.SetFocus(subjectsList)
-		})
-	}
-
-	ChemSelected := func() {
-		modeList.Clear()
-
-		for _, value := range modes["Химия"] {
-			modeList.AddItem(value, "", ' ', func() {})
-		}
-
-		app.SetFocus(modeList)
-		modeList.SetDoneFunc(func() {
-			app.SetFocus(subjectsList)
-		}).SetSelectedFunc(func(int, string, string, rune) {
-			app.SetFocus(subjectsList)
-		})
-	}
-
-	InfoSelected := func() {
-		modeList.Clear()
-
-		for _, value := range modes["Информатика"] {
-			modeList.AddItem(value, "", ' ', func() {})
-		}
-
-		app.SetFocus(modeList)
-		modeList.SetDoneFunc(func() {
-			app.SetFocus(subjectsList)
-		}).SetSelectedFunc(func(int, string, string, rune) {
-			app.SetFocus(subjectsList)
-		})
-	}
-
-	HistSelected := func() {
-		modeList.Clear()
-
-		for _, value := range modes["История"] {
-			modeList.AddItem(value, "", ' ', func() {})
-		}
-
-		app.SetFocus(modeList)
-		modeList.SetDoneFunc(func() {
-			app.SetFocus(subjectsList)
-		}).SetSelectedFunc(func(int, string, string, rune) {
-			app.SetFocus(subjectsList)
-		})
-	}
-
-	EngSelected := func() {
-		modeList.Clear()
-
-		for _, value := range modes["Английский язык"] {
-			modeList.AddItem(value, "", ' ', func() {})
-		}
-
-		app.SetFocus(modeList)
-		modeList.SetDoneFunc(func() {
-			app.SetFocus(subjectsList)
-		}).SetSelectedFunc(func(int, string, string, rune) {
-			app.SetFocus(subjectsList)
-		})
-	}
-
-	PhysSelected := func() {
-		modeList.Clear()
-
-		for _, value := range modes["Физика"] {
-			modeList.AddItem(value, "", ' ', func() {})
-		}
-
-		app.SetFocus(modeList)
-		modeList.SetDoneFunc(func() {
-			app.SetFocus(subjectsList)
-		}).SetSelectedFunc(func(int, string, string, rune) {
-			app.SetFocus(subjectsList)
-		})
 	}
 
 	subjectsList = subjectsList.
-		AddItem("Русский язык", "", 0, RusSelected).
-		AddItem("Математика профиль", "", 0, MathSelected).
-		AddItem("Обществознание", "", 0, SocSelected).
-		AddItem("Биология", "", 0, BioSelected).
-		AddItem("Химия", "", 0, ChemSelected).
-		AddItem("Информатика", "", 0, InfoSelected).
-		AddItem("История", "", 0, HistSelected).
-		AddItem("Английский язык", "", 0, EngSelected).
-		AddItem("Физика", "", 0, PhysSelected)
+		AddItem("Русский язык", "", 0, SelectedHandler("Русский язык")).
+		AddItem("Математика профиль", "", 0, SelectedHandler("Математика")).
+		AddItem("Обществознание", "", 0, SelectedHandler("Обществознание")).
+		AddItem("Биология", "", 0, SelectedHandler("Биология")).
+		AddItem("Химия", "", 0, SelectedHandler("Химия")).
+		AddItem("Информатика", "", 0, SelectedHandler("Информатика")).
+		AddItem("История", "", 0, SelectedHandler("История")).
+		AddItem("Английский язык", "", 0, SelectedHandler("Английский язык")).
+		AddItem("Физика", "", 0, SelectedHandler("Физика"))
 
 	subjectsList.SetBorderPadding(1, 1, 2, 2)
+	modeList.SetBorderPadding(1, 10, 2, 2)
 
 	fmt.Println(subjects)
 	flex := tview.NewFlex().
 		AddItem(tview.NewFlex().
-			SetDirection(tview.FlexRow).
-			AddItem(subjectsList, 10, 1, true).
-			AddItem(modeList, 0, 1, false), 0, 1, true)
+			AddItem(subjectsList, 30, 1, true).
+			AddItem(modeList, 30, 1, false), 0, 1, true)
 	if err := app.SetRoot(flex, true).EnableMouse(true).EnablePaste(true).Run(); err != nil {
 		panic(err)
 	}

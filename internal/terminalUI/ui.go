@@ -5,6 +5,7 @@ import (
 	"github.com/rivo/tview"
 	"path/filepath"
 	"strconv"
+	"strings"
 )
 
 func CreateModes(subjects []string) *map[string][]string {
@@ -35,7 +36,7 @@ func CreateModes(subjects []string) *map[string][]string {
 }
 
 func FindDocs() []string {
-	files, _ := filepath.Glob("../../docxParse/*.docx")
+	files, _ := filepath.Glob("../../internal/parser/Pdoc/documents/*.docx")
 	return files
 }
 
@@ -65,6 +66,39 @@ func DrawUI() {
 	modes := *CreateModes(subjects)
 	modeList := tview.NewList()
 	filesList := tview.NewList()
+
+	filesListDoneFunc := func() {
+		app.SetFocus(subjectsList)
+		filesList.SetBorder(false)
+		subjectsList.SetBorder(true)
+	}
+
+	filesListSelectedFunc := func(int, string, string, rune) {
+		app.SetFocus(subjectsList)
+		filesList.SetBorder(false)
+		subjectsList.SetBorder(true)
+	}
+
+	modeListSelectedFunc := func(int, string, string, rune) {
+		files := FindDocs()
+		filesList.Clear()
+
+		for _, el := range files {
+			splitedPath := strings.Split(el, "\\")
+			fileName := splitedPath[len(splitedPath)-1]
+			filesList.AddItem(fileName, "", 0, func() {})
+		}
+		app.SetFocus(filesList)
+		modeList.SetBorder(false)
+		filesList.SetBorder(true)
+	}
+
+	modeListDoneFunc := func() {
+		modeList.SetBorder(false)
+		subjectsList.SetBorder(true)
+		app.SetFocus(subjectsList)
+	}
+
 	SelectedHandler := func(subject string) func() {
 		return func() {
 			modeList.SetBorder(true)
@@ -75,33 +109,12 @@ func DrawUI() {
 				modeList.AddItem(value, "", 0, func() {})
 			}
 
-			//Вынести отдельно все функции выбора
 			app.SetFocus(modeList)
-			modeList.SetDoneFunc(func() {
-				modeList.SetBorder(false)
-				subjectsList.SetBorder(true)
-				app.SetFocus(subjectsList)
-			}).SetSelectedFunc(func(int, string, string, rune) {
-				files := FindDocs()
-				filesList.Clear()
-				for _, el := range files {
-					filesList.AddItem(el, "", 0, func() {})
-				}
-				app.SetFocus(filesList)
-				modeList.SetBorder(false)
-				filesList.SetBorder(true)
-				filesList.SetDoneFunc(func() {
-					app.SetFocus(subjectsList)
-					filesList.SetBorder(false)
-					subjectsList.SetBorder(true)
-				}).SetSelectedFunc(func(int, string, string, rune) {
-					app.SetFocus(subjectsList)
-					filesList.SetBorder(false)
-					subjectsList.SetBorder(true)
-				})
-			})
 		}
 	}
+
+	modeList.SetDoneFunc(modeListDoneFunc).SetSelectedFunc(modeListSelectedFunc)
+	filesList.SetSelectedFunc(filesListSelectedFunc).SetDoneFunc(filesListDoneFunc)
 
 	subjectsList = subjectsList.
 		AddItem("Русский язык", "", 0, SelectedHandler("Русский язык")).

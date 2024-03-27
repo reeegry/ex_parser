@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/reeegry/ex_parser/internal/parser"
+	"github.com/reeegry/ex_parser/internal/terminalUI"
 )
 
 const (
@@ -23,14 +24,7 @@ const (
 )
 
 func main() {
-	//terminalUI.DrawUI()
-	//parsedExSdamGia := SdamGiaParse()
-	//ExPrint(&parsedExSdamGia)
-	//var parsedExFromDoc []string
-	//parsedExFromDoc = *docxParse.DocxFileParse("./docxParse/1.docx", "")
-	//fmt.Println(parsedExFromDoc)
-	//unloadDoc.Upload(&parsedExFromDoc)
-
+	terminalUI.DrawUI()
 	p := parser.NewParser()
 	p.PsdamGia.GetSdamGiaEx()
 	p.PDoc.DocxFileParse("../../internal/parser/Pdoc/documents/1.docx", "")

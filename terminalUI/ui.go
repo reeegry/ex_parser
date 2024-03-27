@@ -3,6 +3,7 @@ package terminalUI
 import (
 	"fmt"
 	"github.com/rivo/tview"
+	"path/filepath"
 	"strconv"
 )
 
@@ -33,6 +34,11 @@ func CreateModes(subjects []string) *map[string][]string {
 	return &modes
 }
 
+func FindDocs() []string {
+	files, _ := filepath.Glob("../../docxParse/*.docx")
+	return files
+}
+
 func DrawUI() {
 	app := tview.NewApplication()
 
@@ -55,8 +61,13 @@ func DrawUI() {
 	}
 
 	subjectsList := tview.NewList()
+	subjectsList.SetBorder(true)
 	modes := *CreateModes(subjects)
 	modeList := tview.NewList()
+	//input := tview.NewInputField().SetLabel("Enter a number:...").SetFieldWidth(10)
+	//input.SetDisabled(true)
+	filesList := tview.NewList()
+	//path := ""
 	SelectedHandler := func(subject string) func() {
 		return func() {
 			modeList.SetBorder(true)
@@ -67,22 +78,37 @@ func DrawUI() {
 				modeList.AddItem(value, "", 0, func() {})
 			}
 
+			//Вынести отдельно все функции выбора
 			app.SetFocus(modeList)
 			modeList.SetDoneFunc(func() {
 				modeList.SetBorder(false)
 				subjectsList.SetBorder(true)
 				app.SetFocus(subjectsList)
 			}).SetSelectedFunc(func(int, string, string, rune) {
-				app.SetFocus(subjectsList)
+				files := FindDocs()
+				filesList.Clear()
+				for _, el := range files {
+					filesList.AddItem(el, "", 0, func() {})
+				}
+				app.SetFocus(filesList)
 				modeList.SetBorder(false)
-				subjectsList.SetBorder(true)
+				filesList.SetBorder(true)
+				filesList.SetDoneFunc(func() {
+					app.SetFocus(subjectsList)
+					filesList.SetBorder(false)
+					subjectsList.SetBorder(true)
+				}).SetSelectedFunc(func(int, string, string, rune) {
+					app.SetFocus(subjectsList)
+					filesList.SetBorder(false)
+					subjectsList.SetBorder(true)
+				})
 			})
 		}
 	}
 
 	subjectsList = subjectsList.
 		AddItem("Русский язык", "", 0, SelectedHandler("Русский язык")).
-		AddItem("Математика профиль", "", 0, SelectedHandler("Математика")).
+		AddItem("Математика профиль", "", 0, SelectedHandler("Математика профиль")).
 		AddItem("Обществознание", "", 0, SelectedHandler("Обществознание")).
 		AddItem("Биология", "", 0, SelectedHandler("Биология")).
 		AddItem("Химия", "", 0, SelectedHandler("Химия")).
@@ -97,8 +123,9 @@ func DrawUI() {
 	fmt.Println(subjects)
 	flex := tview.NewFlex().
 		AddItem(tview.NewFlex().
-			AddItem(subjectsList, 30, 1, true).
-			AddItem(modeList, 30, 1, false), 0, 1, true)
+			AddItem(subjectsList, 0, 2, true).
+			AddItem(modeList, 0, 1, false).
+			AddItem(filesList, 0, 4, false), 0, 1, true)
 	if err := app.SetRoot(flex, true).EnableMouse(true).EnablePaste(true).Run(); err != nil {
 		panic(err)
 	}

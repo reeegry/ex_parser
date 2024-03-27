@@ -2,13 +2,13 @@ package main
 
 import (
 	"fmt"
+	"github.com/reeegry/ex_parser/terminalUI"
 	"strings"
 
 	"github.com/gocolly/colly"
 
 	"github.com/reeegry/ex_parser/docxParse"
 	"github.com/reeegry/ex_parser/levenshteinDistance"
-	"github.com/reeegry/ex_parser/terminalUI"
 	"github.com/reeegry/ex_parser/unloadDoc"
 )
 
@@ -125,6 +125,7 @@ func SdamGiaParse() map[string]*Exersice {
 	return exrsices
 }
 
+// Сравнение спрашенных данных с решу ЕГЭ и текста из документа
 func compareExersices(sdamGiaExersices *map[string]*Exersice, docExersices *[]string) {
 	toReplace := []string{" ", ".", ",", "\n"}
 	for _, sdamGiaProblem := range *sdamGiaExersices {
@@ -137,8 +138,6 @@ func compareExersices(sdamGiaExersices *map[string]*Exersice, docExersices *[]st
 
 			if levenshteinDistance.FindDistance(&docProblem, &sdamGiaProblem.exText) < min(len(docProblem), len(sdamGiaProblem.exText))/100*5 {
 				fmt.Println("Возможен спиздинг\n")
-				//fmt.Println(docProblem)
-				//fmt.Println(sdamGiaProblem.exText)
 			}
 		}
 	}
@@ -147,9 +146,10 @@ func compareExersices(sdamGiaExersices *map[string]*Exersice, docExersices *[]st
 func main() {
 	terminalUI.DrawUI()
 	parsedExSdamGia := SdamGiaParse()
-
+	ExPrint(&parsedExSdamGia)
 	var parsedExFromDoc []string
 	parsedExFromDoc = *docxParse.DocxFileParse("./docxParse/1.docx", "")
+	//fmt.Println(parsedExFromDoc)
 	unloadDoc.Upload(&parsedExFromDoc)
 
 	compareExersices(&parsedExSdamGia, &parsedExFromDoc)

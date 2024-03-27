@@ -64,10 +64,7 @@ func DrawUI() {
 	subjectsList.SetBorder(true)
 	modes := *CreateModes(subjects)
 	modeList := tview.NewList()
-	//input := tview.NewInputField().SetLabel("Enter a number:...").SetFieldWidth(10)
-	//input.SetDisabled(true)
 	filesList := tview.NewList()
-	//path := ""
 	SelectedHandler := func(subject string) func() {
 		return func() {
 			modeList.SetBorder(true)

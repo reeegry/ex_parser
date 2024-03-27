@@ -1,4 +1,4 @@
-package docxParse
+package Pdoc
 
 import (
 	"code.sajari.com/docconv"
@@ -14,8 +14,19 @@ type Exersize struct {
 	answer string
 }
 
-func rusParseVariant(text *string) *[]string {
-	exercise := make([]string, 0)
+type PDoc struct {
+	Exs []string
+}
+
+func NewPDoc() *PDoc {
+	return &PDoc{
+		Exs: make([]string, 0),
+	}
+}
+
+func (p *PDoc) rusParseVariant(text *string) {
+	//exercise := make([]string, 0)
+	p.Exs = make([]string, 0)
 	indexes := make([][2]int, 0)
 	runesText := []rune(*text)
 	i := 0
@@ -39,21 +50,18 @@ func rusParseVariant(text *string) *[]string {
 			if strings.ToLower(endCheck) == "ответ" {
 				for _, j := range indexes {
 					if j[0] < i-6 {
-						//fmt.Println(j, i-6, string(runesText[j[0]:j[1]+1]))
-						exercise = append(exercise, string(runesText[j[0]:i-6]))
+						p.Exs = append(p.Exs, string(runesText[j[0]:i-6]))
 					}
 				}
 			}
 		}
 
 		i = numIndex + 1
-		//fmt.Println(i)
 	}
 
-	return &exercise
 }
 
-func DocxFileParse(path string, subject string) *[]string {
+func (p *PDoc) DocxFileParse(path string, subject string) {
 	f, err := os.Open(path)
 	if err != nil {
 		panic(err)
@@ -68,6 +76,6 @@ func DocxFileParse(path string, subject string) *[]string {
 		panic(err)
 	}
 
-	return rusParseVariant(&tmpl)
+	p.rusParseVariant(&tmpl)
 	//fmt.Println(tmpl)
 }

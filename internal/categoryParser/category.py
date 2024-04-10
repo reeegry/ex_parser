@@ -7,7 +7,7 @@ sdamgia = SdamGIA()
 
 for subject in subjects:
     with open(f"categores_{subject}.json", "w") as file:
-        print(subject)
+        # print(subject)
         try:
             json.dump(sdamgia.get_catalog(subject), file)
         except:

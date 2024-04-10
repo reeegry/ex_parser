@@ -2,8 +2,9 @@ package PsdamGia
 
 import (
 	"fmt"
-	"github.com/gocolly/colly"
 	"strings"
+
+	"github.com/gocolly/colly"
 )
 
 type Answer struct {
@@ -22,8 +23,19 @@ type PsdamGia struct {
 	url string
 }
 
+func (p *PsdamGia) SetUrl(url string) {
+	p.url = url
+}
+
+func (p *PsdamGia) GetUrl() string {
+	return p.url
+}
+
 func NewPsdamGia() *PsdamGia {
-	return &PsdamGia{}
+	return &PsdamGia{
+		Exs: make(map[string]*Exersice),
+		url: "",
+	}
 }
 
 func (p *PsdamGia) ExPrint() {
@@ -42,7 +54,8 @@ func (p *PsdamGia) ExPrint() {
 
 func (p *PsdamGia) GetSdamGiaEx() {
 	c := colly.NewCollector()
-	exrsices := make(map[string]*Exersice)
+
+	// exrsices := make(map[string]*Exersice)
 
 	c.OnError(func(r *colly.Response, err error) {
 		fmt.Println("Request URL:", r.Request.URL, "failed with response:", r, "\nError:", err)
@@ -69,7 +82,7 @@ func (p *PsdamGia) GetSdamGiaEx() {
 			imgs_src:   imgs,
 			answer_ptr: new(Answer),
 		}
-		exrsices[problemId] = exrsice
+		p.Exs[problemId] = exrsice
 	})
 
 	c.OnHTML("tr.prob_answer", func(h *colly.HTMLElement) {
@@ -92,18 +105,19 @@ func (p *PsdamGia) GetSdamGiaEx() {
 			ansImgs = append(ansImgs, el.Attr("src"))
 		})
 		ansStruct.imgs = ansImgs
-		if entry, ok := exrsices[id]; ok {
+		if entry, ok := p.Exs[id]; ok {
 			entry.answer_ptr = ansStruct
 
 		}
 
 	})
 
-	err := c.Visit("https://math-ege.sdamgia.ru/test?theme=182&print=true")
+	fmt.Println("url:", p.GetUrl())
+	err := c.Visit(p.GetUrl())
 	if err != nil {
 		fmt.Println(err)
 		panic(err)
 	}
 
-	p.Exs = exrsices
+	// p.Exs = exrsices
 }

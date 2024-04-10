@@ -1,11 +1,12 @@
 package Pdoc
 
 import (
-	"code.sajari.com/docconv"
 	"io"
 	"os"
 	"strings"
 	"unicode"
+
+	"code.sajari.com/docconv"
 )
 
 type Exersize struct {
@@ -26,7 +27,7 @@ func NewPDoc() *PDoc {
 
 func (p *PDoc) rusParseVariant(text *string) {
 	//exercise := make([]string, 0)
-	p.Exs = make([]string, 0)
+	// p.Exs = make([]string, 0)
 	indexes := make([][2]int, 0)
 	runesText := []rune(*text)
 	i := 0
@@ -62,6 +63,7 @@ func (p *PDoc) rusParseVariant(text *string) {
 }
 
 func (p *PDoc) DocxFileParse(path string, subject string) {
+
 	f, err := os.Open(path)
 	if err != nil {
 		panic(err)
@@ -71,7 +73,7 @@ func (p *PDoc) DocxFileParse(path string, subject string) {
 	var r io.Reader
 	r = f
 
-	tmpl, _, err := docconv.ConvertDocx(r)
+	tmpl, _, err := docconv.ConvertODT(r)
 	if err != nil {
 		panic(err)
 	}

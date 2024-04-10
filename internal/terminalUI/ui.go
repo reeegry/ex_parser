@@ -1,11 +1,11 @@
 package terminalUI
 
 import (
-	"fmt"
-	"github.com/rivo/tview"
 	"path/filepath"
 	"strconv"
 	"strings"
+
+	"github.com/rivo/tview"
 )
 
 func CreateModes(subjects []string) *map[string][]string {
@@ -31,7 +31,7 @@ func CreateModes(subjects []string) *map[string][]string {
 		}
 	}
 
-	fmt.Println(modes)
+	// fmt.Println(modes)
 	return &modes
 }
 
@@ -130,7 +130,7 @@ func DrawUI() {
 	subjectsList.SetBorderPadding(1, 1, 2, 2)
 	modeList.SetBorderPadding(1, 10, 2, 2)
 
-	fmt.Println(subjects)
+	// fmt.Println(subjects)
 	flex := tview.NewFlex().
 		AddItem(tview.NewFlex().
 			AddItem(subjectsList, 0, 2, true).

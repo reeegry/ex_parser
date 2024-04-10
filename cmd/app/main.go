@@ -26,8 +26,9 @@ const (
 func main() {
 	terminalUI.DrawUI()
 	p := parser.NewParser()
+	p.PsdamGia.SetUrl("https://math-ege.sdamgia.ru/test?theme=182&print=true")
 	p.PsdamGia.GetSdamGiaEx()
-	p.PDoc.DocxFileParse("../../internal/parser/Pdoc/documents/1.docx", "")
+	p.PDoc.DocxFileParse("../../internal/parser/Pdoc/documents/testod.odt", "")
 	p.CompareExersices()
 	//compareExersices(&parsedExSdamGia, &parsedExFromDoc)
 }

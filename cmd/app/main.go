@@ -25,8 +25,6 @@ const (
 
 func main() {
 	p := parser.NewParser()
-	terminalUI.DrawUI(p)
-	// terminalUI.DrawUI()
 
 	p.PsdamGia.SetUrl("https://math-ege.sdamgia.ru/test?theme=172&print=true")
 	p.PsdamGia.GetSdamGiaEx()

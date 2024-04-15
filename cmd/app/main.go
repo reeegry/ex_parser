@@ -24,11 +24,16 @@ const (
 )
 
 func main() {
-	terminalUI.DrawUI()
 	p := parser.NewParser()
-	p.PsdamGia.SetUrl("https://math-ege.sdamgia.ru/test?theme=182&print=true")
+	terminalUI.DrawUI(p)
+	// terminalUI.DrawUI()
+
+	p.PsdamGia.SetUrl("https://math-ege.sdamgia.ru/test?theme=172&print=true")
 	p.PsdamGia.GetSdamGiaEx()
-	p.PDoc.DocxFileParse("../../internal/parser/Pdoc/documents/testod.odt", "")
-	p.CompareExersices()
+
+	terminalUI.DrawUI(p)
+
+	// p.PDoc.DocxFileParse("../../internal/parser/Pdoc/documents/testod.odt", "")
+	// p.CompareExersices()
 	//compareExersices(&parsedExSdamGia, &parsedExFromDoc)
 }

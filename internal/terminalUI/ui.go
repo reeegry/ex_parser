@@ -1,10 +1,12 @@
 package terminalUI
 
 import (
+	"fmt"
 	"path/filepath"
 	"strconv"
 	"strings"
 
+	"github.com/reeegry/ex_parser/internal/parser"
 	"github.com/rivo/tview"
 )
 
@@ -36,12 +38,19 @@ func CreateModes(subjects []string) *map[string][]string {
 }
 
 func FindDocs() []string {
-	files, _ := filepath.Glob("../../internal/parser/Pdoc/documents/*.docx")
+	files, _ := filepath.Glob("../../internal/parser/Pdoc/documents/*.odt") // все остальные форматы сделать
 	return files
 }
 
-func DrawUI() {
+func DrawUI(p *parser.Parser) {
 	app := tview.NewApplication()
+
+	textView := tview.NewTextView().
+		SetDynamicColors(true).
+		SetRegions(true).
+		SetChangedFunc(func() {
+			app.Draw()
+		})
 
 	const (
 		title  = "A[red]n[yellow]t[green]i[blue]s[darkmagenta]p[red]i[yellow]z[white]d[:yellow]i[:green]n[:darkcyan]g"
@@ -67,6 +76,12 @@ func DrawUI() {
 	modeList := tview.NewList()
 	filesList := tview.NewList()
 
+	flex := tview.NewFlex().
+		AddItem(tview.NewFlex().
+			AddItem(subjectsList, 0, 2, true).
+			AddItem(modeList, 0, 1, false).
+			AddItem(filesList, 0, 4, false), 0, 1, true)
+
 	filesListDoneFunc := func() {
 		app.SetFocus(subjectsList)
 		filesList.SetBorder(false)
@@ -77,6 +92,15 @@ func DrawUI() {
 		app.SetFocus(subjectsList)
 		filesList.SetBorder(false)
 		subjectsList.SetBorder(true)
+		path, _ := filesList.GetItemText(filesList.GetCurrentItem())
+
+		//Disable lists
+		app.SetRoot(textView, true).EnableMouse(true)
+
+		p.PDoc.DocxFileParse(path, "")
+		p.CompareExersices(textView)
+
+		fmt.Print(path) // <- Путь до файла
 	}
 
 	modeListSelectedFunc := func(int, string, string, rune) {
@@ -109,6 +133,33 @@ func DrawUI() {
 				modeList.AddItem(value, "", 0, func() {})
 			}
 
+			var url_subject string
+
+			switch subject {
+			case "Русский язык":
+				url_subject = "rus"
+			case "Математика профиль":
+				url_subject = "math"
+			case "Обществознание":
+				url_subject = "soc"
+			case "Биология":
+				url_subject = "bio"
+			case "Химия":
+				url_subject = "chem"
+			case "Информатика":
+				url_subject = "info"
+			case "Литература":
+				url_subject = "lit"
+			case "История":
+				url_subject = "hist"
+			case "Английский язык":
+				url_subject = "eng"
+			case "Физика":
+				url_subject = "phys"
+			}
+
+			p.PsdamGia.Subj = url_subject
+
 			app.SetFocus(modeList)
 		}
 	}
@@ -131,11 +182,6 @@ func DrawUI() {
 	modeList.SetBorderPadding(1, 10, 2, 2)
 
 	// fmt.Println(subjects)
-	flex := tview.NewFlex().
-		AddItem(tview.NewFlex().
-			AddItem(subjectsList, 0, 2, true).
-			AddItem(modeList, 0, 1, false).
-			AddItem(filesList, 0, 4, false), 0, 1, true)
 	if err := app.SetRoot(flex, true).EnableMouse(true).EnablePaste(true).Run(); err != nil {
 		panic(err)
 	}

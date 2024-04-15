@@ -13,14 +13,17 @@ type Answer struct {
 }
 
 type Exersice struct {
+	ProblemId  string
 	ExText     string
 	imgs_src   []string
 	answer_ptr *Answer
 }
 
 type PsdamGia struct {
-	Exs map[string]*Exersice
-	url string
+	// Exs  map[string]*Exersice
+	Exs  []*Exersice
+	url  string
+	Subj string
 }
 
 func (p *PsdamGia) SetUrl(url string) {
@@ -33,8 +36,10 @@ func (p *PsdamGia) GetUrl() string {
 
 func NewPsdamGia() *PsdamGia {
 	return &PsdamGia{
-		Exs: make(map[string]*Exersice),
-		url: "",
+		// Exs:  make(map[string]*Exersice),
+		Exs:  make([]*Exersice, 0),
+		url:  "",
+		Subj: "",
 	}
 }
 
@@ -78,11 +83,13 @@ func (p *PsdamGia) GetSdamGiaEx() {
 
 		})
 		exrsice := &Exersice{
+			ProblemId:  problemId,
 			ExText:     txt,
 			imgs_src:   imgs,
 			answer_ptr: new(Answer),
 		}
-		p.Exs[problemId] = exrsice
+		// p.Exs[problemId] = exrsice
+		p.Exs = append(p.Exs, exrsice)
 	})
 
 	c.OnHTML("tr.prob_answer", func(h *colly.HTMLElement) {
@@ -105,10 +112,15 @@ func (p *PsdamGia) GetSdamGiaEx() {
 			ansImgs = append(ansImgs, el.Attr("src"))
 		})
 		ansStruct.imgs = ansImgs
-		if entry, ok := p.Exs[id]; ok {
-			entry.answer_ptr = ansStruct
-
+		for _, ex := range p.Exs {
+			if ex.ProblemId == id {
+				ex.answer_ptr = ansStruct
+			}
 		}
+		// if entry, ok := p.Exs[id]; ok {
+		// 	entry.answer_ptr = ansStruct
+
+		// }
 
 	})
 

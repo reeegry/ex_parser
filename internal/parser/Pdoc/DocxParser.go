@@ -3,6 +3,7 @@ package Pdoc
 import (
 	"io"
 	"os"
+	"strconv"
 	"strings"
 	"unicode"
 
@@ -10,18 +11,19 @@ import (
 )
 
 type Exersize struct {
-	num    uint
-	text   string
-	answer string
+	Num    int
+	Text   string
+	Answer string
 }
 
 type PDoc struct {
-	Exs []string
+	// Exs []string
+	Exs []*Exersize
 }
 
 func NewPDoc() *PDoc {
 	return &PDoc{
-		Exs: make([]string, 0),
+		Exs: make([]*Exersize, 0),
 	}
 }
 
@@ -51,7 +53,14 @@ func (p *PDoc) rusParseVariant(text *string) {
 			if strings.ToLower(endCheck) == "ответ" {
 				for _, j := range indexes {
 					if j[0] < i-6 {
-						p.Exs = append(p.Exs, string(runesText[j[0]:i-6]))
+
+						// p.Exs = append(p.Exs, string(runesText[j[0]:i-6]))
+						exNum, _ := strconv.Atoi(string(runesText[j[0] : j[1]+1]))
+						p.Exs = append(p.Exs, &Exersize{
+							Num:    exNum,
+							Text:   string(runesText[j[1]+1 : i-6]),
+							Answer: "",
+						})
 					}
 				}
 			}

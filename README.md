@@ -7,8 +7,12 @@
 
 Далее:
 
-`git clone https://github.com/reeegry/ex_parser.git`
-
-`cd ./cmd/app`
-
-`go run .`
+```
+git clone https://github.com/reeegry/ex_parser.git
+```
+```
+cd ./cmd/app
+```
+```
+go run .
+```

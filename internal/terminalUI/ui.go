@@ -38,8 +38,16 @@ func CreateModes(subjects []string) *map[string][]string {
 }
 
 func FindDocs() []string {
-	files, _ := filepath.Glob("../../internal/parser/Pdoc/documents/*.odt") // все остальные форматы сделать
-	return files
+	exts := []string{"odt", "doc", "docx", "txt"}
+	docFiles := make([]string, 0)
+	for _, ext := range exts {
+		path := "../../internal/parser/Pdoc/documents/*." + ext
+		files, _ := filepath.Glob(path) // все остальные форматы сделать
+		for _, val := range files {
+			docFiles = append(docFiles, val)
+		}
+	}
+	return docFiles
 }
 
 func DrawUI(p *parser.Parser) {

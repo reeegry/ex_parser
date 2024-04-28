@@ -1,6 +1,7 @@
 package Pdoc
 
 import (
+	"fmt"
 	"io"
 	"os"
 	"strconv"
@@ -32,6 +33,7 @@ func (p *PDoc) rusParseVariant(text *string) {
 	// p.Exs = make([]string, 0)
 	indexes := make([][2]int, 0)
 	runesText := []rune(*text)
+	runesText = append(runesText, rune('$'))
 	i := 0
 	for i < len(runesText) {
 		numIndex := i
@@ -82,11 +84,24 @@ func (p *PDoc) DocxFileParse(path string, subject string) {
 	var r io.Reader
 	r = f
 
-	tmpl, _, err := docconv.ConvertODT(r)
+	pathSplited := strings.Split(path, "/")
+	ext := strings.Split(pathSplited[len(pathSplited)-1], ".")[1]
+	fmt.Println(ext)
+	fmt.Println(1)
+
+	var tmpl string
+
+	switch ext {
+	case "odt":
+		tmpl, _, err = docconv.ConvertODT(r)
+	case "doc":
+		tmpl, _, err = docconv.ConvertDoc(r)
+	case "docx":
+		tmpl, _, err = docconv.ConvertDocx(r)
+	}
 	if err != nil {
 		panic(err)
 	}
 
 	p.rusParseVariant(&tmpl)
-	//fmt.Println(tmpl)
 }

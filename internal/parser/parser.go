@@ -40,7 +40,7 @@ func (p *Parser) CompareExersices(tw *tview.TextView) {
 
 			if levenshteinDistance.FindDistance(&docTxtReplaced, &sdamGiaProblemReplaced) < min(len(docTxtReplaced), len(sdamGiaProblemReplaced))/100*5 {
 				// fmt.Printf("Возможен спиздинг\n %s\n", sdamGiaProblem.ExText) // добавить пробелы и нормальное форматирование
-				fmt.Fprintf(tw, "[red]Возможен спиздинг: [white][Задача [green]%v[white]] [ID на решу ЕГЭ: [green]%s]\n[white]%s\n\n\n",
+				fmt.Fprintf(tw, "[red]Возможен спиздинг: [white][Задача [green]%v[white]] [ID на решу ЕГЭ: [green]%s]\n[white]%s\n\n\n", // Вставить гиперссылку на Решу егэ
 					docProblem.Num, sdamGiaProblem.ProblemId, sdamGiaProblem.ExText)
 
 			}

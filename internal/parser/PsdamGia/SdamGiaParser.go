@@ -20,10 +20,10 @@ type Exersice struct {
 }
 
 type PsdamGia struct {
-	// Exs  map[string]*Exersice
-	Exs  []*Exersice
-	url  string
-	Subj string
+	Exs       []*Exersice
+	url       string
+	Subj      string
+	parseType uint // 0 [Пробник], 1-n [Линии]
 }
 
 func (p *PsdamGia) SetUrl(url string) {
@@ -55,6 +55,39 @@ func (p *PsdamGia) ExPrint() {
 		fmt.Println("ANSWER TEXT: ", ex.answer_ptr.text)
 		fmt.Println("ANSWER IMGS: ", ex.answer_ptr.imgs)
 	}
+}
+
+func (p *PsdamGia) ChooseSubj(subject string) {
+	var url_subject string
+
+	switch subject {
+	case "Русский язык":
+		url_subject = "rus"
+	case "Математика профиль":
+		url_subject = "math"
+	case "Обществознание":
+		url_subject = "soc"
+	case "Биология":
+		url_subject = "bio"
+	case "Химия":
+		url_subject = "chem"
+	case "Информатика":
+		url_subject = "info"
+	case "Литература":
+		url_subject = "lit"
+	case "История":
+		url_subject = "hist"
+	case "Английский язык":
+		url_subject = "eng"
+	case "Физика":
+		url_subject = "phys"
+	}
+
+	p.Subj = url_subject
+}
+
+func (p *PsdamGia) SetParseType(tp uint) {
+	p.parseType = tp
 }
 
 func (p *PsdamGia) GetSdamGiaEx() {

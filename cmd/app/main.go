@@ -1,6 +1,9 @@
 package main
 
 import (
+	"fmt"
+
+	"github.com/reeegry/ex_parser/internal/categoryParser/jsonDecode"
 	"github.com/reeegry/ex_parser/internal/parser"
 	"github.com/reeegry/ex_parser/internal/terminalUI"
 )
@@ -25,6 +28,8 @@ const (
 
 func main() {
 	p := parser.NewParser()
+	decoder := jsonDecode.New("math", "../../internal/categoryParser/jsonData/math.json")
+	fmt.Printf("%v", decoder)
 
 	p.PsdamGia.SetUrl("https://math-ege.sdamgia.ru/test?theme=172&print=true")
 	p.PsdamGia.GetSdamGiaEx()

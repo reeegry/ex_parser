@@ -9,6 +9,6 @@ for subject in subjects:
     with open(f"internal/categoryParser/{subject}.json", "w") as file:
         # print(subject)
         try:
-            json.dump(sdamgia.get_catalog(subject), file)
+            json.dump(sdamgia.get_catalog(subject), file, ensure_ascii=False)
         except:
             print(f"can't create {subject} json")

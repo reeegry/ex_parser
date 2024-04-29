@@ -42,7 +42,7 @@ func FindDocs() []string {
 	docFiles := make([]string, 0)
 	for _, ext := range exts {
 		path := "../../internal/parser/Pdoc/documents/*." + ext
-		files, _ := filepath.Glob(path) // все остальные форматы сделать
+		files, _ := filepath.Glob(path)
 		for _, val := range files {
 			docFiles = append(docFiles, val)
 		}
@@ -115,6 +115,8 @@ func DrawUI(p *parser.Parser) {
 		files := FindDocs()
 		filesList.Clear()
 
+		p.PsdamGia.SetParseType(uint(modeList.GetCurrentItem()))
+
 		for _, el := range files {
 			splitedPath := strings.Split(el, "\\")
 			fileName := splitedPath[len(splitedPath)-1]
@@ -141,32 +143,7 @@ func DrawUI(p *parser.Parser) {
 				modeList.AddItem(value, "", 0, func() {})
 			}
 
-			var url_subject string
-
-			switch subject {
-			case "Русский язык":
-				url_subject = "rus"
-			case "Математика профиль":
-				url_subject = "math"
-			case "Обществознание":
-				url_subject = "soc"
-			case "Биология":
-				url_subject = "bio"
-			case "Химия":
-				url_subject = "chem"
-			case "Информатика":
-				url_subject = "info"
-			case "Литература":
-				url_subject = "lit"
-			case "История":
-				url_subject = "hist"
-			case "Английский язык":
-				url_subject = "eng"
-			case "Физика":
-				url_subject = "phys"
-			}
-
-			p.PsdamGia.Subj = url_subject
+			p.PsdamGia.ChooseSubj(subject)
 
 			app.SetFocus(modeList)
 		}
